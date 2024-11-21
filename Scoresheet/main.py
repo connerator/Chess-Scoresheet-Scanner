@@ -6,18 +6,19 @@ from ocr import OCRModel
 def main():
 
     # Preprocess the image
-    image_path = 'example2.png'
+    image_path = 'Scoresheet/input_images/example.png'
     processed_image = preprocess_image(image_path)
 
     # Extract move boxes from the preprocessed images (as ROIs)
     move_boxes = extract_move_boxes(processed_image)
 
     # Initialize single-character OCR model
-    ocr_model = OCRModel('Best_points.h5')
+    ocr_model = OCRModel('Scoresheet/models/Best_points.h5')
 
-    # Perform OCR on each move box; 'perform_ocr' returns top N predictions in a tuple of candidates
+    # Perform OCR on each move box; 'perform_ocr' returns top N predictions in a tuple of n candidates
     move_candidates = [ocr_model.perform_ocr(box, n=10) for box in move_boxes]
 
+    # Remove blank move boxes
     move_candidates = [candidate for candidate in move_candidates if candidate != tuple()]
 
     print(len(move_candidates))
